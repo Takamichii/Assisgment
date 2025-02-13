@@ -1,0 +1,70 @@
+-- 1. Total and Average Sales Revenue
+SELECT SUM(TransactionAmount) AS TotalRevenue, 
+       AVG(TransactionAmount) AS AvgRevenue
+FROM sales_data;
+
+-- 2. Total Quantity Sold
+SELECT SUM(Quantity) AS TotalQuantity
+FROM sales_data;
+
+-- 3. Average Discount Applied
+SELECT AVG(DiscountPercent) AS AvgDiscount
+FROM sales_data;
+
+-- 4. Payment Method Distribution
+SELECT PaymentMethod, COUNT(*) AS Count
+FROM sales_data
+WHERE PaymentMethod IS NOT NULL
+GROUP BY PaymentMethod;
+
+-- 5. Regional Sales Distribution
+SELECT Region, SUM(TransactionAmount) AS TotalSales
+FROM sales_data
+WHERE Region IS NOT NULL
+GROUP BY Region;
+
+-- 6. Monthly Sales Trends
+SELECT DATE_FORMAT(TransactionDate, '%Y-%m') AS Month, 
+       SUM(TransactionAmount) AS MonthlySales
+FROM sales_data
+WHERE TransactionDate IS NOT NULL
+GROUP BY Month;
+
+-- 7. Sales by Product Category
+SELECT ProductName, SUM(TransactionAmount) AS TotalSales
+FROM sales_data
+WHERE ProductName IS NOT NULL
+GROUP BY ProductName;
+
+-- 8. Sales by Store Type
+SELECT StoreType, SUM(TransactionAmount) AS TotalSales
+FROM sales_data
+WHERE StoreType IS NOT NULL
+GROUP BY StoreType;
+
+-- 9. Sales by Age Group
+SELECT 
+    CASE 
+        WHEN CustomerAge BETWEEN 18 AND 30 THEN '18-30'
+        WHEN CustomerAge BETWEEN 31 AND 40 THEN '31-40'
+        WHEN CustomerAge BETWEEN 41 AND 50 THEN '41-50'
+        WHEN CustomerAge BETWEEN 51 AND 60 THEN '51-60'
+        ELSE '60+' 
+    END AS AgeGroup, 
+    SUM(TransactionAmount) AS TotalSales
+FROM sales_data
+WHERE CustomerAge IS NOT NULL
+GROUP BY AgeGroup;
+
+-- 10. Sales by Gender
+SELECT CustomerGender, SUM(TransactionAmount) AS TotalSales
+FROM sales_data
+WHERE CustomerGender IS NOT NULL
+GROUP BY CustomerGender;
+
+-- 11. Return Rate by Product
+SELECT ProductName, 
+       100 * SUM(CASE WHEN Returned = 'Yes' THEN 1 ELSE 0 END) / COUNT(*) AS ReturnRate
+FROM sales_data
+WHERE ProductName IS NOT NULL
+GROUP BY ProductName;
